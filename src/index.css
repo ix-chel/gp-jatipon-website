@@ -1,55 +1,99 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Plus Jakarta Sans", sans-serif;
-  --font-serif: "Playfair Display", serif;
+  --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Newsreader", Georgia, serif;
+  --font-serif: "Newsreader", Georgia, serif;
 
-  --color-background: #020617; /* Very dark blue-black / slate-950 */
-  --color-surface: #0F172A; /* slate-900 */
-  --color-elevated: #1E293B; /* slate-800 */
-  
-  --color-text-primary: #F8FAFC;
-  --color-text-muted: #94A3B8;
-  
-  --color-accent: #2563EB; /* Benhur Blue / Royal Blue (blue-600) */
-  
+  /* Master V3 Atmosphere Colors */
+  --color-ivory: #FBF9F5;
+  --color-charcoal: #16171A;
+  --color-warm-grey: #64656C;
+  --color-warm-border: #E8E5DF;
+
+  /* Accent: Ochre / Warm Gold */
+  --color-gold: #C59B27;
+  --color-gold-hover: #AF871C;
+  --color-gold-subtle: rgba(197, 155, 39, 0.12);
+
+  /* Dark Youth Atmosphere */
+  --color-dark-base: #111215;
+  --color-dark-surface: #16171A;
+  --color-dark-elevated: #1F2228;
+  --color-dark-border: #2B2F38;
+
+  /* System mapping */
+  --color-background: #111215;
+  --color-surface: #16171A;
+  --color-elevated: #1F2228;
+  --color-text-primary: #FBF9F5;
+  --color-text-muted: #9496A1;
+  --color-accent: #C59B27;
+  --color-accent-hover: #AF871C;
+
   --color-border-subtle: rgba(255, 255, 255, 0.08);
-  --color-border-strong: rgba(255, 255, 255, 0.15);
+  --color-border-strong: rgba(255, 255, 255, 0.16);
 }
 
 @layer base {
   body {
     background-color: var(--color-background);
     color: var(--color-text-primary);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
-  
-  h1, h2, h3, h4, h5, h6 {
-    font-family: var(--font-serif);
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
   }
-  
-  a, button {
-    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ring-offset-background;
+
+  a,
+  button {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2;
   }
 }
 
+/* Restrained Glass Utilities per Section 12 */
 .glass-panel {
-  background: rgba(15, 23, 42, 0.75); /* Translucent slate-900 */
+  background: rgba(22, 23, 26, 0.72);
   backdrop-filter: blur(12px);
-  border: 1px solid var(--color-border-subtle);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Page transitions / animations */
-.fade-in {
-  animation: fadeIn 0.5s ease-out forwards;
+.glass-panel-light {
+  background: rgba(251, 249, 245, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(22, 23, 26, 0.08);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Editorial Fade animation */
+.editorial-fade {
+  animation: editorialFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes editorialFade {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fade-in {
+  .editorial-fade {
     animation: none !important;
     opacity: 1 !important;
     transform: none !important;
