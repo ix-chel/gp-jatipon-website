@@ -25,14 +25,20 @@ export interface Content {
   mediaUrl?: string; // e.g. Spotify embed link
 }
 
+export type ArchiveCategory = 'kegiatan' | 'dokumentasi' | 'cerita';
+
 export interface ArchiveEntry {
   id: string;
   slug: string;
   year: number;
+  periodLabel?: string; // e.g. "2026" or "2024–2025"
+  category: ArchiveCategory;
+  dateDisplay: string;
   title: string;
   description: string;
   coverImage?: string;
   galleryImages: string[];
+  isPrototype?: boolean;
 }
 
 export type FormStatus = 'idle' | 'submitting' | 'success' | 'error';

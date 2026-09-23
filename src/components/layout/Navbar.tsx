@@ -1,34 +1,35 @@
 import { useState, useEffect } from "react";
 import { Link, useRoute } from "wouter";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Button } from "../ui/Button";
+import { GpLogo } from "../brand/GpLogo";
 
 const NAV_LINKS = [
-  { href: "/", label: "Home" },
-  { href: "/tentang-gp", label: "Tentang GP" },
+  { href: "/tentang-gp", label: "Tentang" },
   { href: "/kegiatan", label: "Kegiatan" },
-  { href: "/konten", label: "Konten" },
-  { href: "/komunitas", label: "Komunitas" },
+  { href: "/konten", label: "Cerita" },
+  { href: "/konten/kategori/boost", label: "Renungan" },
   { href: "/arsip", label: "Arsip" },
-  { href: "/contact", label: "Contact" },
+  { href: "/komunitas", label: "Komunitas" },
 ];
 
 function NavLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
-  const [isActive] = useRoute(href === "/" ? "/" : `${href}/*`);
-  
+  const [isActive] = useRoute(href === "/" ? "/" : `${href}*`);
+
   return (
-    <Link href={href}>
-      <a
-        onClick={onClick}
-        aria-current={isActive ? "page" : undefined}
-        className={cn(
-          "text-sm font-medium transition-colors hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ring-offset-background rounded-sm",
-          isActive ? "text-accent" : "text-text-primary"
-        )}
-      >
-        {label}
-      </a>
+    <Link
+      href={href}
+      onClick={onClick}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        "text-[13px] tracking-normal transition-colors py-1 px-1 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent",
+        isActive
+          ? "text-[#16171A] font-semibold border-b-2 border-accent"
+          : "text-[#64656C] hover:text-[#16171A] font-medium"
+      )}
+    >
+      {label}
     </Link>
   );
 }
@@ -39,7 +40,7 @@ export function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      setIsScrolled(window.scrollY > 15);
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -48,43 +49,68 @@ export function Navbar() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300 border-b border-transparent",
-        isScrolled ? "glass-panel border-white/10" : "bg-transparent"
+        "sticky top-0 z-50 w-full transition-all duration-300",
+        isScrolled
+          ? "bg-[#FBF9F5]/95 backdrop-blur-md border-b border-[#16171A]/10 shadow-sm"
+          : "bg-[#FBF9F5]/90 backdrop-blur-sm border-b border-[#16171A]/05"
       )}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo */}
+      <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-18 sm:h-20">
+          
+          {/* GP Dominant Brand Identity (Header Requirement 1 & 5) */}
           <div className="flex-shrink-0 flex items-center">
-            <Link href="/">
-              <a className="font-serif text-2xl font-bold tracking-tight text-text-primary hover:text-accent transition-colors">
-                GP Jatipon
-              </a>
+            <Link
+              href="/"
+              className="group flex items-center gap-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm py-1"
+            >
+              {/* GP Visual Mark (Placeholder slot for user's logo) */}
+              <GpLogo size="md" variant="light" className="group-hover:scale-105 transition-transform" />
+
+              <div className="flex flex-col">
+                <span className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-[#16171A] group-hover:text-accent transition-colors leading-none">
+                  GP JATIPON
+                </span>
+                <span className="font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.18em] uppercase text-gold mt-1 leading-none">
+                  Gerakan Pemuda
+                </span>
+                <span className="font-sans text-[10px] tracking-tight text-[#64656C] mt-1 font-normal leading-none">
+                  Bagian dari GPIB Jemaat Jatipon Bekasi
+                </span>
+              </div>
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation (Youth Domains) */}
           <nav className="hidden lg:flex items-center gap-8">
             {NAV_LINKS.map((link) => (
               <NavLink key={link.href} href={link.href} label={link.label} />
             ))}
           </nav>
 
-          {/* Desktop CTA */}
-          <div className="hidden lg:flex items-center">
-            <Link href="/komunitas/join">
-              <Button variant="primary" size="sm">Ikut Bersama Kami</Button>
+          {/* Desktop Primary CTA: Ikut Kegiatan */}
+          <div className="hidden lg:flex items-center gap-4">
+            <Link href="/kegiatan">
+              <Button
+                variant="primary"
+                size="sm"
+                className="font-semibold shadow-sm hover:shadow-md flex items-center gap-1.5"
+              >
+                <span>Ikut Kegiatan</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </Button>
             </Link>
           </div>
 
-          {/* Mobile menu button */}
+          {/* Mobile menu toggle */}
           <div className="flex lg:hidden items-center">
             <button
               type="button"
-              className="text-text-primary hover:text-accent p-2 -mr-2"
+              className="text-[#16171A] hover:text-accent p-2 -mr-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-expanded={mobileMenuOpen}
+              aria-label="Toggle navigation menu"
             >
-              <span className="sr-only">Open main menu</span>
               {mobileMenuOpen ? (
                 <X className="block h-6 w-6" aria-hidden="true" />
               ) : (
@@ -95,31 +121,35 @@ export function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      <div
-        className={cn(
-          "lg:hidden absolute top-full left-0 w-full glass-panel border-t border-white/10 transition-all duration-300 overflow-hidden",
-          mobileMenuOpen ? "max-h-screen opacity-100 py-4" : "max-h-0 opacity-0 py-0"
-        )}
-      >
-        <div className="px-4 pt-2 pb-6 space-y-4 flex flex-col">
-          {NAV_LINKS.map((link) => (
-            <NavLink
-              key={link.href}
-              href={link.href}
-              label={link.label}
-              onClick={() => setMobileMenuOpen(false)}
-            />
-          ))}
-          <div className="pt-4 border-t border-white/10">
-            <Link href="/komunitas/join">
-              <Button variant="primary" className="w-full" onClick={() => setMobileMenuOpen(false)}>
-                Ikut Bersama Kami
+      {/* Mobile Menu Dropdown */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-b border-[#16171A]/10 bg-[#FBF9F5] px-4 pt-3 pb-6 space-y-4 shadow-lg animate-in slide-in-from-top duration-200">
+          <div className="flex flex-col space-y-2 pt-1">
+            {NAV_LINKS.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-base font-medium text-[#16171A] hover:text-accent py-2 px-3 rounded-md transition-colors"
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+          <div className="pt-3 border-t border-[#16171A]/10">
+            <Link href="/kegiatan" onClick={() => setMobileMenuOpen(false)}>
+              <Button
+                variant="primary"
+                className="w-full justify-center flex items-center gap-2"
+              >
+                <span>Ikut Kegiatan</span>
+                <ArrowRight className="w-4 h-4" />
               </Button>
             </Link>
           </div>
         </div>
-      </div>
+      )}
     </header>
   );
 }
+

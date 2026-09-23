@@ -1,106 +1,244 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Link } from "wouter";
-import { FolderHeart, ArrowRight, Calendar, ArrowUpRight } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "../components/ui/Card";
+import { ArrowUpRight, FolderHeart } from "lucide-react";
 import { ARCHIVES } from "../data/mock";
 import { cn } from "../utils/cn";
+import type { ArchiveCategory } from "../types";
 
 export function Archive() {
-  const years = [2026, 2025, 2024, 2023, 2022, 2021, 2020];
-  const [selectedYear, setSelectedYear] = useState<number>(2026);
+  // Chronological layer: "Perjalanan GP" (Years / Periods)
+  const periods = [2026, 2025];
+  const [selectedYear, setSelectedYear] = useState<number | "all">("all");
 
-  // Filter archives by year, sorted latest first (although we don't have exact dates in mock, we sort by ID or keep as is if no date)
-  // Assuming ID roughly correlates to chronological order, but we can just filter for now.
-  const filteredArchives = ARCHIVES.filter(archive => archive.year === selectedYear);
+  // Content type categories (separate from the chronological layer)
+  const [selectedCategory, setSelectedCategory] = useState<ArchiveCategory | "all">("all");
+
+  const categories: { key: ArchiveCategory | "all"; label: string }[] = [
+    { key: "all", label: "Semua Format" },
+    { key: "kegiatan", label: "Kegiatan" },
+    { key: "dokumentasi", label: "Dokumentasi Foto & Video" },
+    { key: "cerita", label: "Cerita & Refleksi" },
+  ];
+
+  // Filter archives based on chronological year and content category
+  const filteredArchives = useMemo(() => {
+    return ARCHIVES.filter((item) => {
+      const matchYear = selectedYear === "all" || item.year === selectedYear;
+      const matchCategory = selectedCategory === "all" || item.category === selectedCategory;
+      return matchYear && matchCategory;
+    });
+  }, [selectedYear, selectedCategory]);
 
   return (
-    <div className="flex flex-col w-full fade-in pb-24">
-      {/* Page Header */}
-      <section className="bg-surface pt-24 pb-16 px-4 sm:px-6 lg:px-8 border-b border-white/5">
-        <div className="max-w-3xl mx-auto text-center space-y-6">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif text-text-primary tracking-tight">
-            Arsip Perjalanan
-          </h1>
-          <p className="text-lg md:text-xl text-text-muted leading-relaxed">
-            Menelusuri jejak langkah, album kegiatan, dan memori pelayanan GP Jatipon dari tahun ke tahun.
-          </p>
+    <div className="flex flex-col w-full min-h-screen bg-[#FBF9F5] text-[#16171A]">
+      {/* =========================================================================
+          EDITORIAL PAGE HEADER
+          Atmosphere: Warm Ivory + Subtle Gold Eyebrow + Editorial Display Typography
+          ========================================================================= */}
+      <section className="border-b border-[#E8E5DF] pt-12 sm:pt-16 pb-12 sm:pb-16 bg-[#F4EFE6]/70">
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-gold" />
+              <span className="font-sans text-xs font-bold tracking-[0.2em] uppercase text-gold">
+                ARSIP &middot; JEJAK PERJALANAN
+              </span>
+            </div>
+
+            <h1 className="font-display text-4xl sm:text-5xl lg:text-6xl font-normal tracking-tight leading-[1.1] text-[#16171A]">
+              Memori persekutuan, karya, dan{" "}
+              <span className="italic font-light text-gold block sm:inline">
+                perjalanan kita.
+              </span>
+            </h1>
+
+            <p className="font-sans text-base sm:text-lg text-[#64656C] leading-relaxed max-w-2xl pt-2">
+              Ruang dokumentasi digital yang merawat jejak langkah, perjumpaan pemuda, dan rekaman pelayanan Gerakan Pemuda GPIB Jatipon dari masa ke masa.
+            </p>
+
+            {/* Prototype Notice: Explains prototype state transparently */}
+            <div className="pt-3">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-gold/10 border border-gold/25 text-xs text-[#16171A]">
+                <span className="font-mono font-bold text-gold uppercase text-[10px] tracking-wider">
+                  [Pratinjau Prototipe]
+                </span>
+                <span className="text-[#64656C] text-[11px]">
+                  Catatan berikut merupakan pratinjau tata letak dan alur arsip (bukan rekaman fakta historis final).
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 w-full flex flex-col md:flex-row gap-12">
-        {/* Year Selector Sidebar */}
-        <div className="w-full md:w-48 flex-shrink-0">
-          <div className="sticky top-24">
-            <h3 className="text-sm font-semibold text-text-muted uppercase tracking-widest mb-6 px-2">Pilih Tahun</h3>
-            <div className="flex flex-row md:flex-col overflow-x-auto md:overflow-visible gap-2 pb-4 md:pb-0 hide-scrollbar">
-              {years.map(year => (
+      {/* =========================================================================
+          CONTROLS: CHRONOLOGICAL LAYER (Perjalanan GP) + CONTENT CATEGORIES
+          Separates chronological timeline from content formats per architectural model.
+          ========================================================================= */}
+      <section className="border-b border-[#E8E5DF] bg-[#FBF9F5] sticky top-16 sm:top-20 z-30 shadow-xs">
+        <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-4 space-y-3">
+          
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            
+            {/* 1. CHRONOLOGICAL LAYER: Perjalanan GP (Timeline Selector) */}
+            <div className="flex items-center gap-2 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+              <span className="text-xs font-bold uppercase tracking-wider text-[#64656C] shrink-0 mr-1">
+                Perjalanan GP:
+              </span>
+              <button
+                onClick={() => setSelectedYear("all")}
+                className={cn(
+                  "px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0",
+                  selectedYear === "all"
+                    ? "bg-[#16171A] text-white shadow-sm"
+                    : "bg-[#EFECE6] text-[#64656C] hover:text-[#16171A]"
+                )}
+              >
+                Semua Masa
+              </button>
+              {periods.map((year) => (
                 <button
                   key={year}
                   onClick={() => setSelectedYear(year)}
-                  aria-current={selectedYear === year ? "true" : undefined}
                   className={cn(
-                    "text-left px-4 py-3 rounded-xl transition-colors font-medium flex-shrink-0 flex items-center justify-between focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ring-offset-background",
-                    selectedYear === year 
-                      ? "bg-surface border border-white/10 text-accent shadow-sm" 
-                      : "text-text-muted hover:text-text-primary hover:bg-surface/50 border border-transparent"
+                    "px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all shrink-0 flex items-center gap-1.5",
+                    selectedYear === year
+                      ? "bg-gold text-[#16171A] shadow-sm"
+                      : "bg-[#EFECE6] text-[#64656C] hover:text-[#16171A]"
                   )}
                 >
-                  <span className="text-lg">{year}</span>
-                  {selectedYear === year && <ArrowRight className="h-4 w-4 hidden md:block" />}
+                  <span>Tahun {year}</span>
                 </button>
               ))}
             </div>
-          </div>
-        </div>
 
-        {/* Timeline Layout */}
-        <div className="flex-grow">
-          <div className="mb-8 border-b border-white/5 pb-4">
-            <h2 className="text-3xl font-serif text-text-primary">Tahun {selectedYear}</h2>
-          </div>
-
-          {filteredArchives.length > 0 ? (
-            <div className="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-white/10 before:to-transparent">
-              {filteredArchives.map((archive) => (
-                <div key={archive.id} className="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group is-active">
-                  {/* Timeline Node */}
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full border-4 border-background bg-surface text-accent shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 shadow-sm relative z-10">
-                    <Calendar className="h-4 w-4" />
-                  </div>
-                  
-                  {/* Timeline Card */}
-                  <div className="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] p-4">
-                    <Card className="bg-surface border-white/5 hover:border-accent/30 transition-colors h-full">
-                      <CardHeader className="pb-3">
-                        <div className="text-accent text-xs font-bold tracking-widest mb-1">{archive.year}</div>
-                        <CardTitle className="text-xl group-hover:text-accent transition-colors line-clamp-2">
-                          <Link href={`/arsip/${archive.slug}`}><a>{archive.title}</a></Link>
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <p className="text-sm text-text-muted line-clamp-3 leading-relaxed">{archive.description}</p>
-                      </CardContent>
-                      <CardFooter className="pt-2">
-                        <Link href={`/arsip/${archive.slug}`}>
-                          <a className="inline-flex items-center text-sm font-medium text-text-primary hover:text-accent transition-colors">
-                            Lihat Detail <ArrowUpRight className="ml-1 h-3.5 w-3.5 opacity-50" />
-                          </a>
-                        </Link>
-                      </CardFooter>
-                    </Card>
-                  </div>
-                </div>
+            {/* 2. CATEGORY FORMAT FILTER: Kegiatan, Dokumentasi, Cerita */}
+            <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 hide-scrollbar">
+              {categories.map((cat) => (
+                <button
+                  key={cat.key}
+                  onClick={() => setSelectedCategory(cat.key)}
+                  className={cn(
+                    "px-3 py-1.5 rounded-md text-xs font-medium transition-colors shrink-0",
+                    selectedCategory === cat.key
+                      ? "bg-[#16171A]/10 text-[#16171A] font-semibold border-b-2 border-gold"
+                      : "text-[#64656C] hover:text-[#16171A]"
+                  )}
+                >
+                  {cat.label}
+                </button>
               ))}
             </div>
-          ) : (
-            <div className="py-24 flex flex-col items-center justify-center text-center bg-surface border border-white/5 rounded-2xl border-dashed">
-              <FolderHeart className="h-12 w-12 text-text-muted/30 mb-4" />
-              <h3 className="text-xl font-medium text-text-primary mb-2">Belum ada arsip untuk tahun ini.</h3>
-              <p className="text-text-muted text-sm max-w-sm">Data arsip kegiatan tahun {selectedYear} belum didokumentasikan ke dalam sistem.</p>
-            </div>
-          )}
+
+          </div>
         </div>
-      </div>
+      </section>
+
+      {/* =========================================================================
+          ARCHIVE ITEMS: EDITORIAL CHRONOLOGICAL PRESENTATION
+          Asymmetric layout with generous whitespace, large dates, real photo slots,
+          and restrained gold accents.
+          ========================================================================= */}
+      <main className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 w-full">
+        {filteredArchives.length > 0 ? (
+          <div className="space-y-12 sm:space-y-16">
+            {filteredArchives.map((item) => (
+              <article
+                key={item.id}
+                className="group p-6 sm:p-8 rounded-2xl border border-[#E8E5DF] bg-white hover:border-gold/50 transition-all duration-300 shadow-xs"
+              >
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                  
+                  {/* Left Column (5 cols): Photo Slot with GP Corner Motif */}
+                  <div className="lg:col-span-5">
+                    <div className="relative aspect-[16/10] rounded-xl overflow-hidden border border-[#DCD5C9] bg-[#EDE8DE] p-4 flex flex-col justify-between">
+                      {/* GP Signature Corner Marker */}
+                      <div className="absolute top-0 right-0 w-7 h-7 pointer-events-none">
+                        <svg viewBox="0 0 28 28" fill="none" className="w-full h-full text-gold">
+                          <path d="M0 0H28V28" stroke="currentColor" strokeWidth="2.5" />
+                        </svg>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <span className="font-mono text-[10px] uppercase tracking-wider text-gold font-bold">
+                          {item.category === "kegiatan" && "Dokumentasi Kegiatan"}
+                          {item.category === "dokumentasi" && "Album Dokumentasi"}
+                          {item.category === "cerita" && "Kisah Komunitas"}
+                        </span>
+                        <span className="text-[9px] font-mono uppercase px-2 py-0.5 rounded bg-white/70 border border-[#DCD5C9] text-[#64656C]">
+                          Prototipe
+                        </span>
+                      </div>
+
+                      <div className="text-center py-4">
+                        <p className="font-display text-lg font-semibold text-[#16171A]">
+                          {item.title}
+                        </p>
+                        <span className="font-sans text-xs text-gold mt-1 block">
+                          GP JATIPON
+                        </span>
+                      </div>
+
+                      <div className="text-[10px] font-mono text-[#64656C] flex items-center justify-between">
+                        <span>Tahun {item.year}</span>
+                        <span>{item.dateDisplay}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column (7 cols): Editorial Content & Large Date */}
+                  <div className="lg:col-span-7 space-y-4">
+                    
+                    <div className="flex items-center gap-3">
+                      <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold uppercase tracking-wider bg-gold/15 text-[#977317] border border-gold/30">
+                        {item.category.toUpperCase()}
+                      </span>
+                      <span className="text-sm font-sans font-semibold text-[#64656C]">
+                        {item.dateDisplay}
+                      </span>
+                      <span className="text-[#64656C]/40">&middot;</span>
+                      <span className="text-xs font-mono text-[#64656C]/70">
+                        Periode {item.year}
+                      </span>
+                    </div>
+
+                    <h2 className="font-display text-2xl sm:text-3xl font-bold tracking-tight text-[#16171A] group-hover:text-gold transition-colors">
+                      <Link href={`/arsip/${item.slug}`}>
+                        <span className="cursor-pointer">{item.title}</span>
+                      </Link>
+                    </h2>
+
+                    <p className="text-sm sm:text-base text-[#64656C] leading-relaxed">
+                      {item.description}
+                    </p>
+
+                    <div className="pt-3 flex items-center gap-4">
+                      <Link href={`/arsip/${item.slug}`}>
+                        <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-[#16171A] hover:text-gold transition-colors cursor-pointer">
+                          <span>Buka rincian dokumentasi</span>
+                          <ArrowUpRight className="w-4 h-4" />
+                        </span>
+                      </Link>
+                    </div>
+
+                  </div>
+
+                </div>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <div className="py-24 text-center border border-dashed border-[#DCD5C9] rounded-2xl bg-white/60 p-8 max-w-xl mx-auto space-y-3">
+            <FolderHeart className="h-12 w-12 text-gold/60 mx-auto" />
+            <h3 className="font-display text-xl font-semibold text-[#16171A]">
+              Tidak ada arsip yang cocok
+            </h3>
+            <p className="text-xs text-[#64656C]">
+              Coba pilih filter format atau tahun perjalanan yang berbeda.
+            </p>
+          </div>
+        )}
+      </main>
     </div>
   );
 }
