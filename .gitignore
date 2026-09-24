@@ -33,3 +33,7 @@ dist-ssr
 .env*.local
 .temp/
 
+
+.vercel
+.env*
+!.env.example
