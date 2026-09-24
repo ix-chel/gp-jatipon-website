@@ -13,9 +13,8 @@ node_modules
 dist
 dist-ssr
 *.local
-.env
-.env*.local
-.temp/
+.vercel
+
 
 # Editor directories and files
 .vscode/*
@@ -29,3 +28,8 @@ dist-ssr
 *.sw?
 * text=auto
 *.md
+*.txt
+.env
+.env*.local
+.temp/
+

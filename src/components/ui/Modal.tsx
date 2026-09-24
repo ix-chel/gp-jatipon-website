@@ -38,7 +38,7 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 bg-background/80 backdrop-blur-sm transition-opacity duration-300",
+          "fixed inset-0 bg-ink-950/45 backdrop-blur-md transition-opacity duration-300",
           isOpen ? "opacity-100" : "opacity-0"
         )}
         onClick={onClose}
@@ -47,14 +47,14 @@ export function Modal({ isOpen, onClose, title, children, className }: ModalProp
       {/* Modal Content */}
       <div
         className={cn(
-          "relative z-50 w-full max-w-lg rounded-xl border border-white/10 bg-surface p-6 shadow-2xl transition-all duration-300 mx-4",
+          "relative z-50 w-full max-w-lg rounded-2xl border border-border bg-surface p-6 shadow-floating transition-all duration-300 mx-4",
           isOpen ? "scale-100 opacity-100" : "scale-95 opacity-0",
           className
         )}
       >
         <div className="flex items-center justify-between mb-5">
-          {title && <h2 className="text-xl font-serif font-semibold">{title}</h2>}
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full ml-auto" onClick={onClose}>
+          {title && <h2 className="text-xl font-display font-bold text-ink-950">{title}</h2>}
+          <Button variant="ghost" size="sm" className="h-8 w-8 p-0 rounded-full ml-auto text-ink-500 hover:text-ink-950" onClick={onClose}>
             <X className="h-4 w-4" />
             <span className="sr-only">Close</span>
           </Button>

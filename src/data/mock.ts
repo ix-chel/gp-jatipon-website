@@ -37,7 +37,7 @@ export const CONTENTS: Content[] = [
   {
     id: '2',
     slug: 'podcast-ep-10',
-    title: '[PODCAST] Eps 10: Pemuda dan Kesehatan Mental',
+    title: '[PONDASI] Eps 10: Pemuda dan Kesehatan Mental',
     category: 'podcast',
     publishedAt: '2026-08-10T10:00:00Z',
     author: 'GP Jatipon Podcast',

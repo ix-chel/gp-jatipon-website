@@ -39,6 +39,60 @@ export type Database = {
   }
   public: {
     Tables: {
+      boosts: {
+        Row: {
+          author: string | null
+          cover_image: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          prayer: string | null
+          publish_date: string
+          reflection: string
+          scripture_reference: string
+          scripture_text: string
+          slug: string
+          status: Database["public"]["Enums"]["boost_status"]
+          title: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          author?: string | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          prayer?: string | null
+          publish_date: string
+          reflection: string
+          scripture_reference: string
+          scripture_text: string
+          slug: string
+          status?: Database["public"]["Enums"]["boost_status"]
+          title: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          author?: string | null
+          cover_image?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          prayer?: string | null
+          publish_date?: string
+          reflection?: string
+          scripture_reference?: string
+          scripture_text?: string
+          slug?: string
+          status?: Database["public"]["Enums"]["boost_status"]
+          title?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: []
+      }
       activities: {
         Row: {
           created_at: string
@@ -433,6 +487,7 @@ export type Database = {
       is_staff: { Args: never; Returns: boolean }
     }
     Enums: {
+      boost_status: "draft" | "scheduled" | "published" | "archived"
       community_submission_type: "join" | "volunteer" | "prayer"
       content_category: "boost" | "podcast" | "article"
       media_type: "image" | "audio" | "video" | "document"
@@ -575,6 +630,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      boost_status: ["draft", "scheduled", "published", "archived"],
       community_submission_type: ["join", "volunteer", "prayer"],
       content_category: ["boost", "podcast", "article"],
       media_type: ["image", "audio", "video", "document"],

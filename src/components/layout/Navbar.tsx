@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useRoute } from "wouter";
+import { Link } from "wouter";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { Button } from "../ui/Button";
@@ -9,13 +9,30 @@ const NAV_LINKS = [
   { href: "/tentang-gp", label: "Tentang" },
   { href: "/kegiatan", label: "Kegiatan" },
   { href: "/konten", label: "Cerita" },
-  { href: "/konten/kategori/boost", label: "Renungan" },
+  { href: "/arsip?format=boost", label: "Renungan" },
   { href: "/arsip", label: "Arsip" },
   { href: "/komunitas", label: "Komunitas" },
 ];
 
+function isLinkActive(href: string): boolean {
+  if (typeof window === "undefined") return false;
+  const currentPath = window.location.pathname;
+  const currentSearch = window.location.search;
+
+  if (href === "/arsip?format=boost") {
+    return (currentPath === "/arsip" && currentSearch.includes("format=boost")) || currentPath.startsWith("/boost");
+  }
+  if (href === "/arsip") {
+    return currentPath === "/arsip" && !currentSearch.includes("format=boost");
+  }
+  if (href === "/") {
+    return currentPath === "/";
+  }
+  return currentPath.startsWith(href);
+}
+
 function NavLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
-  const [isActive] = useRoute(href === "/" ? "/" : `${href}*`);
+  const isActive = isLinkActive(href);
 
   return (
     <Link
@@ -30,6 +47,27 @@ function NavLink({ href, label, onClick }: { href: string; label: string; onClic
       )}
     >
       {label}
+    </Link>
+  );
+}
+
+function MobileNavLink({ href, label, onClick }: { href: string; label: string; onClick?: () => void }) {
+  const isActive = isLinkActive(href);
+
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      aria-current={isActive ? "page" : undefined}
+      className={cn(
+        "text-base font-medium py-2.5 px-3 rounded-lg transition-colors flex items-center justify-between",
+        isActive
+          ? "text-primary font-bold bg-primary/10"
+          : "text-[#16171A] hover:text-primary hover:bg-black/5"
+      )}
+    >
+      <span>{label}</span>
+      {isActive && <span className="w-1.5 h-1.5 rounded-full bg-accent" />}
     </Link>
   );
 }
@@ -57,7 +95,7 @@ export function Navbar() {
     >
       <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18 sm:h-20">
-          
+
           {/* GP Dominant Brand Identity (Header Requirement 1 & 5) */}
           <div className="flex-shrink-0 flex items-center">
             <Link
@@ -68,13 +106,16 @@ export function Navbar() {
               <GpLogo size="md" variant="light" className="group-hover:scale-105 transition-transform" />
 
               <div className="flex flex-col">
-                <span className="font-display text-lg sm:text-xl font-extrabold tracking-tight text-[#16171A] group-hover:text-accent transition-colors leading-none">
-                  GP JATIPON
-                </span>
-                <span className="font-sans text-[10px] sm:text-[11px] font-bold tracking-[0.18em] uppercase text-gold mt-1 leading-none">
-                  Gerakan Pemuda
-                </span>
-                <span className="font-sans text-[10px] tracking-tight text-[#64656C] mt-1 font-normal leading-none">
+                <div className="flex items-baseline gap-1.5">
+                  <span className="font-display text-xl sm:text-2xl font-bold tracking-tight text-[#16171A] group-hover:text-accent transition-colors leading-none">
+                    GP JATIPON
+                  </span>
+                  <span className="font-sans text-[11px] font-semibold tracking-wider uppercase text-gold">
+                    Gerakan Pemuda
+                  </span>
+                </div>
+                {/* Secondary contextual parent organization attribution */}
+                <span className="font-sans text-[10px] tracking-wide text-[#64656C] mt-0.5 font-normal">
                   Bagian dari GPIB Jemaat Jatipon Bekasi
                 </span>
               </div>
@@ -124,16 +165,14 @@ export function Navbar() {
       {/* Mobile Menu Dropdown */}
       {mobileMenuOpen && (
         <div className="lg:hidden border-b border-[#16171A]/10 bg-[#FBF9F5] px-4 pt-3 pb-6 space-y-4 shadow-lg animate-in slide-in-from-top duration-200">
-          <div className="flex flex-col space-y-2 pt-1">
+          <div className="flex flex-col space-y-1.5 pt-1">
             {NAV_LINKS.map((link) => (
-              <Link
+              <MobileNavLink
                 key={link.href}
                 href={link.href}
+                label={link.label}
                 onClick={() => setMobileMenuOpen(false)}
-                className="text-base font-medium text-[#16171A] hover:text-accent py-2 px-3 rounded-md transition-colors"
-              >
-                {link.label}
-              </Link>
+              />
             ))}
           </div>
           <div className="pt-3 border-t border-[#16171A]/10">

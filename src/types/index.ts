@@ -25,7 +25,27 @@ export interface Content {
   mediaUrl?: string; // e.g. Spotify embed link
 }
 
-export type ArchiveCategory = 'kegiatan' | 'dokumentasi' | 'cerita';
+export type BoostStatus = 'draft' | 'scheduled' | 'published' | 'archived';
+
+export interface Boost {
+  id: string;
+  slug: string;
+  title: string;
+  scriptureReference: string;
+  scriptureText: string;
+  reflection: string;
+  prayer?: string | null;
+  author?: string | null;
+  publishDate: string; // YYYY-MM-DD
+  status: BoostStatus;
+  coverImage?: string | null;
+  createdBy?: string | null;
+  updatedBy?: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type ArchiveCategory = 'kegiatan' | 'dokumentasi' | 'cerita' | 'boost';
 
 export interface ArchiveEntry {
   id: string;
@@ -39,6 +59,7 @@ export interface ArchiveEntry {
   coverImage?: string;
   galleryImages: string[];
   isPrototype?: boolean;
+  boostSlug?: string; // link to dedicated boost detail if applicable
 }
 
 export type FormStatus = 'idle' | 'submitting' | 'success' | 'error';

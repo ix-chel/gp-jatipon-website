@@ -19,6 +19,14 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { AdminLayout } from "./layouts/AdminLayout";
 import { Login } from "./pages/admin/Login";
 import { Dashboard } from "./pages/admin/Dashboard";
+import { AdminBoost } from "./pages/admin/AdminBoost";
+import { BoostEditor } from "./pages/admin/BoostEditor";
+import { AdminContent } from "./pages/admin/AdminContent";
+import { AdminActivities } from "./pages/admin/AdminActivities";
+import { AdminArchives } from "./pages/admin/AdminArchives";
+import { AdminNotFound } from "./pages/admin/AdminNotFound";
+import { BoostDetail } from "./pages/BoostDetail";
+import { Redirect } from "wouter";
 
 function App() {
   return (
@@ -32,19 +40,20 @@ function App() {
           <ProtectedRoute>
             <AdminLayout>
               <Switch>
-                <Route path="/dashboard" component={Dashboard} />
-                <Route path="/content">
-                  <div>Content Management (Coming Soon)</div>
+                {/* Redirect any accidental /admin/admin/* prefix to clean /admin/dashboard */}
+                <Route path="/admin/:rest*">
+                  {() => <Redirect to="/dashboard" />}
                 </Route>
-                <Route path="/activities">
-                  <div>Activities Management (Coming Soon)</div>
-                </Route>
-                <Route path="/archives">
-                  <div>Archives Management (Coming Soon)</div>
-                </Route>
-                {/* Redirect /admin to /admin/dashboard */}
+
                 <Route path="/" component={Dashboard} />
-                <Route component={NotFound} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/boost" component={AdminBoost} />
+                <Route path="/boost/new" component={BoostEditor} />
+                <Route path="/boost/:id/edit" component={BoostEditor} />
+                <Route path="/content" component={AdminContent} />
+                <Route path="/activities" component={AdminActivities} />
+                <Route path="/archives" component={AdminArchives} />
+                <Route component={AdminNotFound} />
               </Switch>
             </AdminLayout>
           </ProtectedRoute>
@@ -52,7 +61,7 @@ function App() {
 
         {/* Public Website Routes */}
         <Route>
-          <div className="min-h-screen flex flex-col bg-bg-light text-text-primary-light">
+          <div className="min-h-screen flex flex-col bg-background text-ink-700">
             <Navbar />
             
             <main className="flex-grow w-full">
@@ -61,6 +70,9 @@ function App() {
                 <Route path="/tentang-gp" component={About} />
                 <Route path="/kegiatan" component={Activities} />
                 <Route path="/kegiatan/:slug" component={ActivityDetail} />
+                
+                <Route path="/boost/:slug" component={BoostDetail} />
+                <Route path="/boost">{() => <Redirect to="/arsip?format=boost" />}</Route>
                 
                 <Route path="/konten" component={ContentHub} />
                 <Route path="/konten/kategori/:category" component={ContentHub} />

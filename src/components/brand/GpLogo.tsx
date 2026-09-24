@@ -22,9 +22,9 @@ export function GpLogo({ className, size = "md", variant = "auto" }: GpLogoProps
   };
 
   const variantStyles = {
-    auto: "bg-[#16171A] text-[#FBF9F5] border border-white/10 dark:bg-white/10 dark:text-white",
-    light: "bg-[#16171A] text-[#FBF9F5] border border-[#16171A]/10",
-    dark: "bg-white/10 text-[#FBF9F5] border border-white/15",
+    auto: "bg-primary text-white border border-primary/20 shadow-subtle",
+    light: "bg-primary text-white border border-primary/20 shadow-subtle",
+    dark: "bg-primary text-white border border-white/20 shadow-subtle",
   };
 
   return (
@@ -44,11 +44,11 @@ export function GpLogo({ className, size = "md", variant = "auto" }: GpLogoProps
         e.g. <img src="/gp-logo.svg" alt="GP Jatipon Logo" className="w-full h-full object-contain p-1" />
       */}
       <div className="flex items-center justify-center w-full h-full">
-        <span className="font-serif italic font-bold tracking-tighter text-gold">GP</span>
+        <span className="font-display font-extrabold tracking-tight text-white">GP</span>
       </div>
 
-      {/* Subtle corner badge marker */}
-      <span className="absolute bottom-0 right-0 w-1.5 h-1.5 bg-gold rounded-tl-sm opacity-80" />
+      {/* Subtle corner badge marker (Terracotta accent per Section 5) */}
+      <span className="absolute bottom-0 right-0 w-2 h-2 bg-accent rounded-tl-sm opacity-90" />
     </div>
   );
 }
