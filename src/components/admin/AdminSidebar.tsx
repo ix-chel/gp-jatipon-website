@@ -19,7 +19,7 @@ interface AdminSidebarProps {
 
 export const AdminSidebar: React.FC<AdminSidebarProps> = ({ onCloseMobile }) => {
   const [location] = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, role, signOut } = useAuth();
 
   const handleSignOut = async () => {
     await signOut();
@@ -172,7 +172,7 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ onCloseMobile }) => 
             <div className="flex items-center gap-1.5 mt-0.5">
               <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400" />
               <span className="text-[10px] text-slate-400 font-mono uppercase">
-                Editor
+                {role ?? "staff"}
               </span>
             </div>
           </div>

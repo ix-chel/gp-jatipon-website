@@ -21,7 +21,7 @@ import {
   deleteBoost,
   formatJakartaDate,
   getJakartaDateString,
-} from "../../lib/boosts";
+} from "../../lib/data/boosts";
 import type { Boost, BoostStatus } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 

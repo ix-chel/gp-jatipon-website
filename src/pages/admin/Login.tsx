@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { ShieldCheck, Lock, Mail, AlertCircle } from "lucide-react";
 import { supabase } from "../../lib/supabase";
@@ -10,13 +10,13 @@ export const Login: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [, setLocation] = useLocation();
-  const { session } = useAuth();
+  const { session, isStaff, roleLoading, signOut } = useAuth();
 
-  // If already logged in, redirect to dashboard
-  if (session) {
-    setLocation("/admin/dashboard");
-    return null;
-  }
+  useEffect(() => {
+    if (session && isStaff) {
+      setLocation("/admin/dashboard");
+    }
+  }, [session, isStaff, setLocation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,6 +35,35 @@ export const Login: React.FC = () => {
       setLocation("/admin/dashboard");
     }
   };
+
+  if (session && roleLoading) {
+    return (
+      <div className="min-h-screen bg-[#070b14] flex items-center justify-center text-xs uppercase tracking-wider text-slate-400">
+        Memeriksa akses redaksi...
+      </div>
+    );
+  }
+
+  if (session && !isStaff) {
+    return (
+      <div className="min-h-screen bg-[#070b14] flex flex-col items-center justify-center px-4 text-center">
+        <div className="max-w-md rounded-2xl border border-red-500/30 bg-[#0c1222] p-6 text-slate-300">
+          <h1 className="text-lg font-bold text-white">Akun belum diberi akses admin</h1>
+          <p className="mt-2 text-sm text-slate-400">
+            Tambahkan akun ini ke tabel user_roles sebagai admin atau editor sebelum masuk ke
+            portal redaksi.
+          </p>
+          <button
+            type="button"
+            onClick={() => void signOut()}
+            className="mt-5 rounded-xl bg-blue-600 px-4 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-blue-500"
+          >
+            Keluar
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[#070b14] flex flex-col justify-center py-12 px-4 sm:px-6 lg:px-8 selection:bg-blue-600 selection:text-white">

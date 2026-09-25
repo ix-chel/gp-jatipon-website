@@ -18,7 +18,7 @@ import {
   getAllBoostsAdmin,
   formatJakartaDate,
   getJakartaDateString,
-} from "../../lib/boosts";
+} from "../../lib/data/boosts";
 import type { BoostStatus } from "../../types";
 import { useAuth } from "../../contexts/AuthContext";
 import { ConfirmDialog } from "../../components/admin/ConfirmDialog";

@@ -19,7 +19,7 @@ import {
   getAllBoostsAdmin,
   formatJakartaDate,
   getJakartaDateString,
-} from "../../lib/boosts";
+} from "../../lib/data/boosts";
 import type { Boost } from "../../types";
 
 export const Dashboard: React.FC = () => {

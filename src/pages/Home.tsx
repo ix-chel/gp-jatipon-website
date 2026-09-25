@@ -4,7 +4,7 @@ import { ArrowRight, ArrowUpRight, BookOpen, Calendar, Sparkles } from "lucide-r
 import { GpLogo } from "../components/brand/GpLogo";
 import { CommunityPhotoSlot } from "../components/brand/CommunityPhotoSlot";
 import { Button } from "../components/ui/Button";
-import { getTodaysBoost, formatJakartaDate, getJakartaDateString } from "../lib/boosts";
+import { getTodaysBoost, formatJakartaDate, getJakartaDateString } from "../lib/data/boosts";
 import type { Boost } from "../types";
 
 export function Home() {

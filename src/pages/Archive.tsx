@@ -4,7 +4,7 @@ import { ArrowUpRight, FolderHeart, BookOpen, Search, Sparkles } from "lucide-re
 import { ARCHIVES } from "../data/mock";
 import { cn } from "../utils/cn";
 import type { ArchiveCategory, Boost } from "../types";
-import { getBoostArchive, formatJakartaDate } from "../lib/boosts";
+import { getBoostArchive, formatJakartaDate } from "../lib/data/boosts";
 
 export function Archive() {
   // Chronological layer: "Perjalanan GP" (Years / Periods)

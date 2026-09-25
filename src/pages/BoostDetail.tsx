@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useRoute, Link } from "wouter";
 import { ArrowLeft, Calendar, User, Share2, BookOpen, Check, Heart, Sparkles } from "lucide-react";
-import { getBoostBySlug, formatJakartaDate } from "../lib/boosts";
+import { getBoostBySlug, formatJakartaDate } from "../lib/data/boosts";
 import type { Boost } from "../types";
 import { Button } from "../components/ui/Button";
 
